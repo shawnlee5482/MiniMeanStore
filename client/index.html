@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+ <!-- THESE TWO VERSIONS BELOW MUST MATCH!!!! -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+    //  inject the ngRoute dependency in the module.
+    var myApp = angular.module('myApp', ['ngRoute']);
+
+    // setup route
+    myApp.config(function($routeProvider) {
+        $routeProvider
+        .when('/customers', {
+            templateUrl: 'partial/customers.html'})
+        .when('/products', {
+            templateUrl: 'partial/products.html'})
+        .when('/orders', {
+            templateUrl: 'partial/orders.html'})  
+        .when('/dashboard', {
+            templateUrl: 'partial/dashboard.html'})                    
+        .otherwise( {
+            redirectTo:'/customers'
+        });
+    });
+
+    // build the factory
+    myApp.factory('customersFactory', function($http) {
+        var factory = {};
+
+        factory.customers = [];
+
+        factory.addCustomer = function(name, callback) {
+
+            var currentTime = new Date();
+            var p = {name:name, date: currentTime};  // reduced the number for testing
+            $http.post('/customers', p).success(function(output) {
+                callback(output);
+            });
+        }
+
+        factory.deleteCustomer = function(customer, callback) {
+            var index = factory.customers.indexOf(customer);
+            $http.get('/customers/delete/' + index).success(function(output) {
+                callback(output);
+            }); 
+        }
+
+        factory.getCustomers = function(callback) {
+            $http.get('/customers').success(function(output) {
+                callback(output);
+                factory.customers = output;
+            });          
+        };
+
+        return factory;
+    });
+
+    // build the factory
+    myApp.factory('productsFactory', function($http) {
+        var factory = {};
+
+        factory.products = [];
+
+        factory.addProduct = function(name, imgUrl, description, quantity, callback) {
+            var p = {name:name, imgUrl:imgUrl, description:description, quantity:quantity};  // reduced the number for testing
+            console.log('addProduct in myapp.factory', p);
+            $http.post('/products', p).success(function(output) {
+                callback(output);
+            });
+        }
+
+        factory.deleteProduct = function(product, callback) {
+            var index = factory.products.indexOf(product);
+            $http.get('/products/delete/' + index).success(function(output) {
+                callback(output);
+            }); 
+        }
+
+        factory.getProducts = function(callback) {
+            $http.get('/products').success(function(output) {
+                callback(output);
+                factory.products = output;
+            }); 
+        };
+
+        return factory;
+    });
+
+    // build the factory
+    myApp.factory('ordersFactory', function($http) {
+        var factory = {};
+
+        factory.orders = [];
+        
+        factory.addOrder = function(name, product, quantity, callback) {
+            var currentTime = new Date();
+            var p = {name:name, product:product, quantity: quantity, date: currentTime};
+            console.log('factory addOrder=', p);
+            $http.post('/orders', p).success(function(output) {
+                callback(output);
+            });
+        }
+
+        factory.getOrders = function(callback) {
+            $http.get('/orders').success(function(output) {
+                callback(output);
+                factory.orders = output;
+            }); 
+        };
+
+        return factory;
+    });
+
+    //  build the controllers
+    myApp.controller('customersController', function (customersFactory, $scope, $location) {
+
+
+      $scope.addCustomer = function() {
+          for(var i = 0; i < $scope.customers.length; i++) {
+            if($scope.customers[i].name == $scope.name) {
+              alert('there is a customer has the same name');
+              return;
+            }
+          }        
+          customersFactory.addCustomer($scope.name, function(data) {
+              // check if there is a customer already
+
+              $scope.customers = data;
+          });              
+          customersFactory.getCustomers(function(data) {
+              $scope.customers = data;    
+          });
+          $location.url('/customers');  
+      }
+
+      $scope.deleteCustomer = function(customer) {       
+          customersFactory.deleteCustomer(customer, function() {
+            customersFactory.getCustomers(function(data) {
+                $scope.customers = data;    
+                $location.url('/customers');   
+            });            
+          }); 
+      }
+
+      $scope.getCustomers = function() {              
+          customersFactory.getCustomers(function(data) {
+              $scope.customers = data;              
+          });                      
+      }
+
+    });
+
+    //  products controller
+    myApp.controller('productsController', function ($scope, productsFactory, $location) {
+      $scope.quantityRange = [];
+      $scope.showLimit = 10;
+
+      $scope.showMore = function() { 
+        if($scope.showOption == "showMore") {
+          $scope.showLimit = 100000; 
+          $scope.showOption = "showLess"; 
+        } else {
+          $scope.showLimit = 10; 
+          $scope.showOption = "showMore";           
+        }
+      };
+
+
+
+      $scope.addProduct = function() {
+          productsFactory.addProduct($scope.name, $scope.imgUrl, $scope.description, $scope.quantity, function(data) {
+              $scope.products = data;
+          });              
+          productsFactory.getProducts(function(data) {
+              $scope.products = data;    
+          });
+          $location.url('/products');              
+      }
+
+      $scope.deleteProduct = function(product) {
+          productsFactory.deleteProduct(product, function() {
+            productsFactory.getProducts(function(data) {
+                $scope.products = data;    
+                $location.url('/products');   
+            });            
+          });  
+      }
+
+      $scope.getProducts = function() {              
+          productsFactory.getProducts(function(data) {
+              $scope.products = data;              
+          });                       
+      }
+
+      // quantity setting max value is 100
+      $scope.initValues = function() {
+        for(var i = 0; i < 100; i++) $scope.quantityRange.push(i);
+      }
+    });
+
+    //  orders controller
+    myApp.controller('ordersController', function ($scope, ordersFactory, customersFactory, productsFactory, $location) {
+      $scope.addOrder = function() {
+          console.log('controller addOrder=', $scope.customer.name, $scope.product.name, $scope.quantity);
+          if(!$scope.quantity) {
+            alert("there is no stock");
+            return;
+          }
+          ordersFactory.addOrder($scope.customer.name, $scope.product.name, $scope.quantity, function(data) {
+            $scope.orders = data;  
+            $scope.getOrders();
+            $location.url('/orders'); 
+          });              
+      }
+
+      $scope.quantityRange = function(n) {
+        var r = [];
+        for(var i = 1; i <= n; i++) r.push(i);
+        return r;
+      }
+
+      $scope.getOrders = function() {
+          // to fill select option menu for customers
+          customersFactory.getCustomers(function(data) {
+              $scope.customers = data;              
+          }); 
+          // to fill select option menu for products
+          productsFactory.getProducts(function(data) {
+              $scope.products = data;              
+          }); 
+
+          // get orders data
+          ordersFactory.getOrders(function(data) {
+              $scope.orders = data;              
+          });                      
+      }
+    });
+
+    //  orders controller
+    myApp.controller('dashboardController', function ($scope, ordersFactory, customersFactory, productsFactory, $location) {
+      $scope.getOrders = function() {
+          // to fill select option menu for customers
+          customersFactory.getCustomers(function(data) {
+              $scope.customers = data;
+              console.log($scope.customers);              
+          }); 
+          // to fill select option menu for products
+          productsFactory.getProducts(function(data) {
+              $scope.products = data;  
+              console.log($scope.products);             
+          }); 
+
+          // get orders data
+          ordersFactory.getOrders(function(data) {
+              $scope.orders = data;   
+              console.log($scope.orders);            
+          });                      
+      }
+
+      $scope.initShowOptions = function() {
+          $scope.showOptionProduct = 'showMore';
+          $scope.showLimitProduct = 10;
+          $scope.showOptionOrders = 'showMore';
+          $scope.showLimitOrders = 10;
+          $scope.showOptionCustomers = 'showMore';
+          $scope.showLimitCustomers= 10;
+      }
+
+      $scope.showMoreProduct = function() {
+         if($scope.showOptionProduct == 'showMore') {
+            $scope.showOptionProduct = 'showLess';
+            $scope.showLimitProduct = 1000;
+         } else {
+            $scope.showOptionProduct = 'showMore';
+            $scope.showLimitProduct = 10;
+         }
+      }
+      $scope.showMoreOrders = function() {
+         if($scope.showOptionOrders == 'showMore') {
+            $scope.showOptionOrders = 'showLess';
+            $scope.showLimitOrders = 1000;
+         } else {
+            $scope.showOptionOrders = 'showMore';
+            $scope.showLimitOrders = 10;
+         }
+      }
+
+      $scope.showMoreCustomers = function() {
+         if($scope.showOptionCustomers == 'showMore') {
+            $scope.showOptionCustomers = 'showLess';
+            $scope.showLimitCustomers = 1000;
+         } else {
+            $scope.showOptionCustomers = 'showMore';
+            $scope.showLimitCustomers = 10;
+         }
+      }
+
+      $scope.boughtHours = function(date) {
+          // convert date string into date object
+          var date2 = new Date(date);
+          // get current date
+          var date1 = new Date();
+          // calculate elapsed date
+          var diff = date1 - date2;
+          console.log(diff);
+          // return elapsed date
+          if(diff < 1000 * 60) { // less than 1 min, displayed as second
+             return Math.trunc(diff/1000).toString() + 'seconds';
+          } else if(diff < 1000 * 60 * 60) { // less than 1 hr, displayed as min
+            return Math.trunc(diff / 1000 / 60).toString() + 'mins';
+          } else if(diff < 1000 * 60 * 60 * 24) { // less than 1 day, displayed as hours
+            return Math.trunc(diff / 1000 / 60 / 60).toString() + 'hours';
+          } else { // displayed as days
+            return Math.trunc(diff / 1000 / 60 / 60 / 24).toString() + '';
+          }
+      }       
+    });
+
+    </script>
+
+  </head>
+  <body>
+    <div id="main" ng-app='myApp'>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#customers">Customers</a> 
+        <a href="#products">Products</a>
+        <a href="#orders">Orders</a><br><hr>
+        <div ng-view=""></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<div ng-controller="ordersController">
+  <h1>Place an order</h1>
+  Customer <select ng-model="customer" ng-options="customer.name for customer in customers"></select> 
+  Quantity <select ng-model="quantity" ng-options="quantity for quantity in quantityRange(product.quantity)"></select>  
+  Product <select ng-model="product" ng-options="product.name for product in products"></select> 
+  <input type="submit" ng-click="addOrder();quantityRange(product.quantity)">
+
+  <input type="text" ng-model="filter_name" placeholder="Search Order by Customer Name">
+  <table class="table table-condensed" ng-init="getOrders()">
+      <thead>
+          <tr>
+              <th>Customer Name</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat='order in orders | filter: {"name" : filter_name}'>
+              <td ng-bind='order.name'></td>
+              <td ng-bind='order.product'></td>
+              <td ng-bind='order.quantity'></td>
+              <td ng-bind='order.date'></td>
+          </tr>
+      </tbody>
+  </table>
+</div>

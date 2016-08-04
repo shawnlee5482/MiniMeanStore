@@ -1,0 +1,58 @@
+<div ng-controller="dashboardController">
+  <style>
+    li.product {
+      display: inline-block;
+      width: 100px;
+      height: 150px;
+    }
+    .productThumbnail img{
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+    }
+    .productThumbnail label {
+      display: inline-block;
+      width: 100px;
+      height: 20px;
+      text-align: center;
+    }
+
+    #leftPanel {
+      width: 30%;
+    }
+    #rightPanel {
+      width: 70%;
+    }
+  </style>
+  <div id="leftPanel" ng-init="initValues()">
+    <input type="text" ng-model="filter_name" placeholder="Search"> 
+  </div>
+
+  <div id="rightPanel" ng-init="getOrders(); initShowOptions()">
+    <ul>
+        <li class="product" ng-repeat='product in products | filter:{name: filter_name}' ng-show='$index < showLimitProduct'>    
+        <div class="productThumbnail">
+          <img ng-src='{{product.imgUrl}}'>
+          <label ng-bind='product.name'></label>
+          <label ng-bind='product.quantity'></label>
+        </div>
+      </li>
+    </ul>
+    <button ng-click="showMoreProduct()" ng-model="showOptionProduct" ng-bind="showOptionProduct"></button>
+
+    <ul>
+      <li class="order" ng-repeat='order in orders' ng-show="$index < showLimitOrders">
+        <label ng-bind='order.name'></label> purchased <label ng-bind='order.quantity'></label> <label ng-bind='order.product'></label> (<label ng-bind='boughtHours(order.date)'></label> ago)
+      </li>
+    </ul>
+    <button ng-click="showMoreOrders()" ng-model="showOptionOrders" ng-bind="showOptionOrders"></button>
+
+    <ul>
+      <li class="customer" ng-repeat='customer in customers' ng-show="$index < showLimitCustomers">
+        <label ng-bind='customer.name'></label> Joined the store (<label ng-bind='boughtHours(customer.date)'></label> ago)
+      </li>
+    </ul>
+    <button ng-click="showMoreCustomers()" ng-model="showOptionCustomers" ng-bind="showOptionCustomers"></button>
+
+  </div>
+</div>

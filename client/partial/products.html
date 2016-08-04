@@ -1,0 +1,63 @@
+<div ng-controller="productsController">
+  <style>
+    li {
+      display: inline-block;
+      width: 100px;
+      height: 150px;
+    }
+    .productThumbnail img{
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+    }
+    .productThumbnail label.first {
+      display: inline-block;
+      width: 100px;
+      height: 20px;
+      text-align: center;
+    }
+
+    .productquantity {
+      display: inline-block;
+      width: 100px;
+      height: 20px;
+      text-align: center;
+    }
+
+    #leftPanel {
+      width: 30%;
+    }
+    #rightPanel {
+      width: 70%;
+    }
+  </style>
+  <div id="leftPanel" ng-init="initValues()">
+    <input type="text" ng-model="filter_name" placeholder="Filter"> 
+    <h4>Add a new product</h4>
+    <label>Name</label>
+    <input type="text" ng-model="name" placeholder="Name"> <br>
+    <label>Image Url</label>
+    <input type="text" ng-model="imgUrl" placeholder="http://"> <br>
+
+    <label>Description</label>
+    <textarea ng-model="description" placeholder="write description here"> </textarea> <br>
+    <label>Initial Quantity</label>
+    <select ng-model="quantity" ng-options="quantity for quantity in quantityRange"> </select>
+    <input type="submit" ng-click="addProduct()">
+  </div>
+
+  <div id="rightPanel">
+    <ul ng-init="getProducts()">
+      <li ng-repeat='product in products' ng-show="$index < showLimit">
+        <div class="productThumbnail">
+          <img ng-src='{{product.imgUrl}}'>
+          <label class="first" ng-bind='product.name'></label>
+          <div class="productquantity"> 
+            <label ng-bind='product.quantity'></label><label>left</label>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <button ng-click="showMore()" ng-model="showOption" ng-init="showOption = 'showMore'" ng-bind="showOption"></button>
+  </div>
+</div>

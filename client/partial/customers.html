@@ -1,0 +1,26 @@
+
+
+
+<div ng-controller="customersController">
+  <h1>Add a new customer</h1>
+  Customer Name <input type="text" ng-model="name" placeholder="Input Name Here"> <br>
+  <input type="submit" value="Submit" ng-click="addCustomer()">
+
+  <input type="text" ng-model='filter_name' placeholder="Search Name">
+  <table class="table table-condensed" ng-init="getCustomers()">
+      <thead>
+          <tr>
+              <th>Customer Name</th>
+              <th>Created Date</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat="customer in customers | filter: filter_name">
+              <td ng-bind='customer.name'></td>
+              <td ng-bind='customer.date'></td>
+              <td><button ng-click="deleteCustomer(customer)">Remove</button></td>
+          </tr>
+        </tbody>
+    </table>
+</div>
