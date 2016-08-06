@@ -161,14 +161,14 @@
     //  products controller
     myApp.controller('productsController', function ($scope, productsFactory, $location) {
       $scope.quantityRange = [];
-      $scope.showLimit = 10;
+      $scope.showLimit = 6;
 
       $scope.showMore = function() { 
         if($scope.showOption == "showMore") {
           $scope.showLimit = 100000; 
           $scope.showOption = "showLess"; 
         } else {
-          $scope.showLimit = 10; 
+          $scope.showLimit = 8;
           $scope.showOption = "showMore";           
         }
       };
@@ -267,11 +267,11 @@
 
       $scope.initShowOptions = function() {
           $scope.showOptionProduct = 'showMore';
-          $scope.showLimitProduct = 10;
+          $scope.showLimitProduct = 8;
           $scope.showOptionOrders = 'showMore';
-          $scope.showLimitOrders = 10;
+          $scope.showLimitOrders = 8;
           $scope.showOptionCustomers = 'showMore';
-          $scope.showLimitCustomers= 10;
+          $scope.showLimitCustomers= 8;
       }
 
       $scope.showMoreProduct = function() {
@@ -280,7 +280,7 @@
             $scope.showLimitProduct = 1000;
          } else {
             $scope.showOptionProduct = 'showMore';
-            $scope.showLimitProduct = 10;
+            $scope.showLimitProduct = 8;
          }
       }
       $scope.showMoreOrders = function() {
@@ -289,7 +289,7 @@
             $scope.showLimitOrders = 1000;
          } else {
             $scope.showOptionOrders = 'showMore';
-            $scope.showLimitOrders = 10;
+            $scope.showLimitOrders = 8;
          }
       }
 
@@ -299,7 +299,7 @@
             $scope.showLimitCustomers = 1000;
          } else {
             $scope.showOptionCustomers = 'showMore';
-            $scope.showLimitCustomers = 10;
+            $scope.showLimitCustomers = 8;
          }
       }
 
@@ -329,10 +329,10 @@
   </head>
   <body>
     <div id="main" ng-app='myApp'>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#customers">Customers</a> 
-        <a href="#products">Products</a>
-        <a href="#orders">Orders</a><br><hr>
+        <a href="#dashboard" class="navibar">Dashboard</a>
+        <a href="#customers" class="navibar">Customers</a>
+        <a href="#products" class="navibar">Products</a>
+        <a href="#orders" class="navibar">Orders</a><br><hr>
         <div ng-view=""></div>
     </div>
   </body>

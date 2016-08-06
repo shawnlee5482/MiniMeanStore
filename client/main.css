@@ -1,0 +1,48 @@
+body {
+    font-size: 24px;
+}
+
+hr {
+    border-color: lightgrey;
+}
+
+.navibar {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.productThumbnail{
+
+}
+
+li {
+    border: solid 1px black;
+    list-style-type: none;
+    width: 300px;
+    height: 300px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px;
+    text-align: center;
+}
+
+.productThumbnail img{
+    width: 200px;
+    height: 200px;
+    /*border: solid black;*/
+}
+
+.productquantity {
+    height: 20px;
+}
+
+li.order, li.customer {
+    border: solid 1px black;
+    list-style-type: none;
+    width: 300px;
+    height: 100px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px;
+    text-align: center;
+}

@@ -3,9 +3,11 @@
   Customer <select ng-model="customer" ng-options="customer.name for customer in customers"></select> 
   Quantity <select ng-model="quantity" ng-options="quantity for quantity in quantityRange(product.quantity)"></select>  
   Product <select ng-model="product" ng-options="product.name for product in products"></select> 
-  <input type="submit" ng-click="addOrder();quantityRange(product.quantity)">
+  <input value="Submit" type="submit" ng-click="addOrder();quantityRange(product.quantity)">
 
   <input type="text" ng-model="filter_name" placeholder="Search Order by Customer Name">
+    <br>
+    <br>
   <table class="table table-condensed" ng-init="getOrders()">
       <thead>
           <tr>
