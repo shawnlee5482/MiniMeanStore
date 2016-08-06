@@ -1,6 +1,6 @@
 {
   "name": "Mini Store",
   "tagline": "",
-  "body": "### Welcome to Mini Store\r\nThis project is to build mini online store. \r\n\r\n### Skill Used\r\n`MongoDB` `Express` `AngularJS` `Node.JS`\r\n\r\n### User page\r\nUser page shows the list of user registered.\r\n\r\n### Product Page\r\nProduct Page shows the product with image and remaining number.\r\n\r\n### Order Page\r\nIn order page, you can select product and number of product to buy.\r\n",
+  "body": "## MiniMeanStore\r\n\r\nMiniMean store is an web application you can sell and buy products.\r\n\r\n### Skill Used\r\n`Node.JS` `Express` `AngularJS` `MongoDB`\r\n\r\n![MiniMeanStore.png](https://github.com/shawnlee5482/MiniMeanStore/blob/master/MiniMean.png?raw=true)\r\n\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
